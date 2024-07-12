@@ -14,6 +14,21 @@ model User {
   id          String @id @default(uuid())
   email       String @unique
   name        String 
-  password    String 
+  password    String
+  wallets     Wallet[]
+}
+
+model Wallet {
+  id          String @id @default(uuid())
+  user        User @relation(fields: [user_id], references: [id])
+  user_id     String
+  coins       Coin[]
+}
+
+model Coin {
+  id          String @id @default(uuid())
+  wallet      Wallet @relation(fields: [wallet_id], references: [id])
+  wallet_id   String
+  name        String
 }
 

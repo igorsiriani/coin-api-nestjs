@@ -18,13 +18,13 @@ export class AuthController{
                 status: 'Ok!',
                 message: 'Successfully login!',
                 result: result
-            })
+            });
 
-        }catch(err){
+        } catch(err) {
             return response.status(500).json({
                 status: 'Error!',
                 message: 'Internal Server Error!',
-            })
+            });
         }
     }
 
@@ -39,7 +39,6 @@ export class AuthController{
                 result: result,
             });
         } catch (err) {
-            console.log(err)
             return response.status(500).json({
                 status: 'Error!',
                 message: 'Internal Server Error!',

@@ -19,9 +19,9 @@ export class UserController {
                 message: 'Successfully fetch data!',
                 result: result
             })
-        }catch(err){
+        } catch(err) {
             return response.status(500).json({
-                status: 'Ok!',
+                status: 'Error!',
                 message : 'Internal Server Error!'
             })
         }
@@ -51,9 +51,9 @@ export class UserController {
                 message: 'Successfully updated data!',
                 result: result
             })
-        }catch(err){
+        } catch(err) {
             return response.status(500).json({
-                status: 'Ok!',
+                status: 'Error!',
                 message : 'Internal Server Error!'
             })
         }
@@ -68,9 +68,9 @@ export class UserController {
                 status: 'Ok!',
                 message: 'Successfully deleted data!'
             })
-        }catch(err){
+        } catch(err) {
             return response.status(500).json({
-                status: 'Ok!',
+                status: 'Error!',
                 message : 'Internal Server Error!'
             })
         }
