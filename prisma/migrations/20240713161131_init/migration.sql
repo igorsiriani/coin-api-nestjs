@@ -10,6 +10,7 @@ CREATE TABLE "User" (
 CREATE TABLE "Wallet" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "user_id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     CONSTRAINT "Wallet_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 

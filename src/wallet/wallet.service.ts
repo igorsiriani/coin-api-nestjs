@@ -14,7 +14,7 @@ export class WalletService{
     async getAllWallets(user_id: string):Promise<any>{
         return this.prisma.wallet.findMany({
             where: {
-                user_id: user_id
+                user_id
             },
             include: {
                 coins: true
@@ -34,87 +34,109 @@ export class WalletService{
     }
 
     
-    async createWallet(user_id: string, coins: string[]): Promise<any>{
+    async createWallet(user_id: string, name: string, coins: string[]): Promise<any>{
         return new Promise(async (resolve) => {
-            let res_wallet =  await this.prisma.wallet.create({
-                data: {
-                    user_id
-                }
-            });
-
-            let coin_list = []
-            let control = 0;
-            coins.forEach(async (coin) => {
-                coin_list.push({
-                    wallet_id: res_wallet.id,
-                    name: coin
+            try {
+                let res_wallet =  await this.prisma.wallet.create({
+                    data: {
+                        user_id,
+                        name
+                    }
                 });
-                control += 1;
-                if (control === coins.length) {
-                    let res_coins = await this.prisma.coin.createMany({
-                        data: coin_list
-                    });
-            
-                    let result = await this.prisma.wallet.findUnique({
-                        where: {
-                            id: res_wallet.id
-                        },
-                        include: {
-                            coins: true
-                        }
-                    });
 
-                    resolve(result);
-                }
-            });
+                let coin_list = []
+                let control = 0;
+                coins.forEach(async (coin) => {
+                    coin_list.push({
+                        wallet_id: res_wallet.id,
+                        name: coin
+                    });
+                    control += 1;
+                    if (control === coins.length) {
+                        let res_coins = await this.prisma.coin.createMany({
+                            data: coin_list
+                        });
+                
+                        let result = await this.prisma.wallet.findUnique({
+                            where: {
+                                id: res_wallet.id
+                            },
+                            include: {
+                                coins: true
+                            }
+                        });
+
+                        resolve(result);
+                    }
+                });
+            } catch (error) {
+                throw error;
+            }
         });
     }
 
-    async updateWallet(coins: string[], wallet_id: string): Promise<any>{
+    async updateWallet(name: string, coins: string[], wallet_id: string): Promise<any>{
         return new Promise(async (resolve) => {
+            try {
+                await this.prisma.wallet.update({
+                    data: {
+                        name
+                    },
+                    where: {
+                        id: wallet_id
+                    }
+                })
+
+                await this.prisma.coin.deleteMany({
+                    where: {
+                        wallet_id
+                    }
+                });
+                let coin_list = []
+                let control = 0;
+                coins.forEach(async (coin) => {
+                    coin_list.push({
+                        wallet_id,
+                        name: coin
+                    });
+                    control += 1;
+                    if (control === coins.length) {
+                        let res_coins = await this.prisma.coin.createMany({
+                            data: coin_list
+                        });
+                
+                        let result = await this.prisma.wallet.findUnique({
+                            where: {
+                                id: wallet_id
+                            },
+                            include: {
+                                coins: true
+                            }
+                        });
+
+                        resolve(result);
+                    }
+                });
+            } catch (error) {
+                throw error;
+            }
+        });
+    }
+
+    async deleteWallet(wallet_id: string):Promise<Wallet>{
+        try {
             await this.prisma.coin.deleteMany({
                 where: {
                     wallet_id
                 }
             });
-            let coin_list = []
-            let control = 0;
-            coins.forEach(async (coin) => {
-                coin_list.push({
-                    wallet_id,
-                    name: coin
-                });
-                control += 1;
-                if (control === coins.length) {
-                    let res_coins = await this.prisma.coin.createMany({
-                        data: coin_list
-                    });
-            
-                    let result = await this.prisma.wallet.findUnique({
-                        where: {
-                            id: wallet_id
-                        },
-                        include: {
-                            coins: true
-                        }
-                    });
-
-                    resolve(result);
+            return this.prisma.wallet.delete({
+                where: {
+                    id: wallet_id
                 }
             });
-        });
-    }
-
-    async deleteWallet(wallet_id: string):Promise<Wallet>{
-        await this.prisma.coin.deleteMany({
-            where: {
-                wallet_id
-            }
-        });
-        return this.prisma.wallet.delete({
-            where: {
-                id: wallet_id
-            }
-        });
+        } catch (error) {
+            throw error;
+        }
     }
 }

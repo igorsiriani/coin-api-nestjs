@@ -13,7 +13,7 @@ export class WalletController {
     @UseGuards(JwtAuthGuard)
     async creatWallet(@Req() request: any, @Res() response: Response, @Body() walletDto: WalletDto):Promise<any>{
         try {
-            const result = await this.walletService.createWallet(request.user.id, walletDto.coins);
+            const result = await this.walletService.createWallet(request.user.id, walletDto.name, walletDto.coins);
             return response.status(200).json({
                 status: 'Ok!',
                 message: 'Successfully created wallet!',
@@ -68,7 +68,7 @@ export class WalletController {
     @UseGuards(JwtAuthGuard)
     async updateWallet(@Req() request: any, @Res() response: Response, @Body() walletDto: WalletDto):Promise<any>{
         try {
-            const result = await this.walletService.updateWallet(walletDto.coins, request.params.id);
+            const result = await this.walletService.updateWallet(walletDto.name, walletDto.coins, request.params.id);
             return response.status(200).json({
                 status: 'Ok!',
                 message: 'Successfully updated data!',

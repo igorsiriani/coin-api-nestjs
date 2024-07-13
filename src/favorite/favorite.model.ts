@@ -4,6 +4,8 @@ import * as mongoose from 'mongoose';
 export const FavoriteSchema = new mongoose.Schema({
     user_id: { type: String, required: true },
     fav_list: { type: Array<String>, required: true },
+}, {
+    collection: 'favorites'
 });
 
 export interface Favorite{

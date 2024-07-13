@@ -1,5 +1,4 @@
 import { ConflictException, Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
 import { Favorite } from "./favorite.model";
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from "mongoose";
@@ -10,7 +9,6 @@ import { Model } from "mongoose";
 export class FavoriteService{
 
     constructor(
-        private prisma: PrismaService,
         @InjectModel('Favorite')
         private readonly favoriteModel: Model<Favorite>,){}
 
